@@ -631,6 +631,22 @@ body::before {
 @media (prefers-reduced-motion: reduce) {
   .portrait img, .card { transition: none; }
 }
+  
+  .carousel-viewport {
+  overflow: hidden;
+  touch-action: pan-y;
+  cursor: grab;
+  user-select: none;
+}
+
+.carousel-viewport:active {
+  cursor: grabbing;
+}
+
+.track {
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+}
 </style>
 </head>
 
@@ -874,6 +890,8 @@ let velocity = 0;
 let lastX = 0;
 let lastMoveTime = 0;
 let activePointer = null;
+let didDrag = false;
+let suppressClick = false;
 
 /* สร้างการ์ดตัวละคร */
 function makeCard(c) {
@@ -1263,30 +1281,28 @@ document.addEventListener('keydown', e => {
 
 search.addEventListener('input', render);
 
-/* หยุดการเลื่อนอัตโนมัติเมื่อเอาเมาส์ชี้ */
+
+/* ควบคุมการเลื่อนแถวตัวละคร */
 viewport.addEventListener('pointerenter', () => {
   paused = true;
 });
 
 viewport.addEventListener('pointerleave', () => {
+  dragging = false;
+  activePointer = null;
+
   if (!document.getElementById('modal').classList.contains('open')) {
     paused = false;
   }
-
-  dragging = false;
-
-  try {
-    if (activePointer !== null) {
-      viewport.releasePointerCapture(activePointer);
-    }
-  } catch (e) {}
 });
 
-/* ลากแถวตัวละครด้วยเมาส์หรือการสัมผัส */
+/* ลากได้ทั้งบนการ์ดและพื้นที่ว่าง */
 viewport.addEventListener('pointerdown', e => {
-  if (e.target.closest('.card')) return;
+  if (e.target.closest('button, a, input')) return;
+  if (e.pointerType === 'mouse' && e.button !== 0) return;
 
   dragging = true;
+  didDrag = false;
   activePointer = e.pointerId;
   startX = e.clientX;
   lastX = e.clientX;
@@ -1301,24 +1317,49 @@ viewport.addEventListener('pointermove', e => {
 
   const now = performance.now();
   const dx = e.clientX - lastX;
+  const totalDx = e.clientX - startX;
   const elapsed = Math.max(1, now - lastMoveTime);
 
-  offset += dx;
-  velocity = (dx / elapsed) * 1000;
+  if (Math.abs(totalDx) > 6) {
+    didDrag = true;
+  }
+
+  if (didDrag) {
+    offset += dx;
+    velocity = (dx / elapsed) * 1000;
+
+    if (loopWidth > 0) {
+      offset = ((offset % loopWidth) + loopWidth) % loopWidth;
+      offset = offset > 0 ? offset - loopWidth : offset;
+    }
+
+    track.style.transform = `translate3d(${offset}px,0,0)`;
+  }
 
   lastX = e.clientX;
   lastMoveTime = now;
-
-  if (loopWidth > 0) {
-    if (offset <= -loopWidth) offset += loopWidth;
-    if (offset > 0) offset -= loopWidth;
-  }
-
-  track.style.transform = `translate3d(${offset}px,0,0)`;
 });
 
-function stopDrag() {
+/* ป้องกันการเปิดรายละเอียดโดยไม่ตั้งใจหลังลาก */
+track.addEventListener('click', e => {
+  if (suppressClick) {
+    e.preventDefault();
+    e.stopPropagation();
+    suppressClick = false;
+  }
+}, true);
+
+function stopDrag(e) {
+  if (!dragging) return;
+  if (e && activePointer !== null && e.pointerId !== activePointer) return;
+
   dragging = false;
+
+  if (didDrag) {
+    suppressClick = true;
+    velocity = Math.max(-700, Math.min(700, velocity));
+  }
+
   activePointer = null;
 
   if (!document.getElementById('modal').classList.contains('open')) {
@@ -1329,16 +1370,22 @@ function stopDrag() {
 viewport.addEventListener('pointerup', stopDrag);
 viewport.addEventListener('pointercancel', stopDrag);
 
-/* รองรับล้อเมาส์แนวนอน */
+/* รองรับเมาส์และทัชแพด */
 viewport.addEventListener('wheel', e => {
-  if (Math.abs(e.deltaX) > 0) {
-    offset -= e.deltaX;
-    track.style.transform = `translate3d(${offset}px,0,0)`;
-  } else if (e.shiftKey) {
-    offset -= e.deltaY;
+  if (Math.abs(e.deltaX) > 0 || e.shiftKey) {
+    e.preventDefault();
+
+    const delta = Math.abs(e.deltaX) > 0 ? e.deltaX : e.deltaY;
+    offset -= delta;
+
+    if (loopWidth > 0) {
+      offset = ((offset % loopWidth) + loopWidth) % loopWidth;
+      offset = offset > 0 ? offset - loopWidth : offset;
+    }
+
     track.style.transform = `translate3d(${offset}px,0,0)`;
   }
-}, { passive: true });
+}, { passive: false });
 
 render();
 </script>
