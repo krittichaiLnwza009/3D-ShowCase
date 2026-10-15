@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="th">
 <head>
@@ -21,7 +22,14 @@
   --cyan: #52e6df;
 }
 
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+button {
+  font-family: inherit;
+}
 
 html, body {
   width: 100%;
@@ -78,7 +86,9 @@ body::before {
   letter-spacing: 1px;
 }
 
-.brand span { color: var(--cyan); }
+.brand span {
+  color: var(--cyan);
+}
 
 .topnote {
   color: var(--muted);
@@ -133,7 +143,9 @@ body::before {
   margin: 6px 0;
 }
 
-.hero-panel small { color: var(--muted); }
+.hero-panel small {
+  color: var(--muted);
+}
 
 .searchrow {
   display: flex;
@@ -154,7 +166,9 @@ body::before {
   outline: none;
 }
 
-.search:focus { border-color: var(--accent); }
+.search:focus {
+  border-color: var(--accent);
+}
 
 .hint {
   color: var(--muted);
@@ -190,6 +204,8 @@ body::before {
   align-items: stretch;
   padding: 2px 0 10px;
   touch-action: pan-y;
+  user-select: none;
+  cursor: grab;
   mask-image: linear-gradient(
     90deg,
     transparent,
@@ -197,6 +213,10 @@ body::before {
     black 98%,
     transparent
   );
+}
+
+.carousel-viewport:active {
+  cursor: grabbing;
 }
 
 .track {
@@ -232,6 +252,11 @@ body::before {
 .card:focus,
 .card:focus-visible {
   outline: none;
+}
+
+.card,
+.card * {
+  user-select: none;
 }
 
 /* กรอบรูป */
@@ -328,7 +353,9 @@ body::before {
   cursor: pointer;
 }
 
-.viewbtn:hover { background: #8b7cff35; }
+.viewbtn:hover {
+  background: #8b7cff35;
+}
 
 .empty {
   padding: 30px;
@@ -344,7 +371,7 @@ body::before {
   font-size: .68rem;
 }
 
-/* หน้าต่างรายละเอียด */
+/* หน้าต่างรายละเอียดตัวละคร */
 
 .modal {
   display: none;
@@ -358,7 +385,9 @@ body::before {
   justify-content: center;
 }
 
-.modal.open { display: flex; }
+.modal.open {
+  display: flex;
+}
 
 .modalbox {
   width: min(1000px, 100%);
@@ -369,13 +398,14 @@ body::before {
   overflow: hidden;
   position: relative;
   box-shadow: 0 30px 100px #0009;
+  transition: height .25s ease;
 }
 
 .close {
   position: absolute;
   top: 10px;
   right: 10px;
-  z-index: 4;
+  z-index: 6;
   border: 1px solid var(--line);
   background: #080b16dd;
   color: white;
@@ -428,7 +458,9 @@ body::before {
   line-height: 1.3;
 }
 
-.details .origin { margin: 5px 0 13px; }
+.details .origin {
+  margin: 5px 0 13px;
+}
 
 .detailtext {
   color: #d5dbef;
@@ -452,12 +484,128 @@ body::before {
 .skill {
   font-size: .75rem;
   padding: 6px 9px;
-  border: 1px solid #8b7cff55;
-  background: #8b7cff14;
+  border: 1px solid #9b8cff80;
+  background: linear-gradient(120deg,#8b7cff2b,#52e6df12);
   border-radius: 9px;
+  box-shadow: inset 0 0 14px #8b7cff0b;
+  transition: transform .2s, border-color .2s, box-shadow .2s;
 }
 
-/* ลิงก์ Google และเกมต้นทาง */
+.skill:hover {
+  transform: translateY(-2px);
+  border-color: var(--cyan);
+  box-shadow: 0 0 18px #52e6df20;
+}
+
+/* ปุ่มและแถบด้านบน */
+
+.top-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.top-action,
+.modal-nav,
+.collapse-btn {
+  border: 1px solid var(--line);
+  color: var(--text);
+  cursor: pointer;
+  background: linear-gradient(135deg,#8b7cff22,#52e6df12);
+  border-radius: 10px;
+  padding: 8px 11px;
+  transition: .2s ease;
+}
+
+.top-action:hover,
+.modal-nav:hover,
+.collapse-btn:hover {
+  border-color: var(--cyan);
+  box-shadow: 0 0 18px #52e6df22;
+}
+
+/* ย่อเฉพาะเนื้อเรื่อง ไม่ซ่อนรูป ความสามารถ หรือสถานะ */
+
+.detailtext.story-collapsed {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+}
+
+.detail-topline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding-right: 42px;
+}
+
+.detail-topline .collapse-btn {
+  white-space: nowrap;
+  font-size: .72rem;
+}
+
+/* ปุ่มเปลี่ยนตัวละครอยู่ด้านข้างกรอบ */
+
+.modal-navrow {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.modal-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 38px;
+  height: 52px;
+  padding: 0;
+  font-size: 1.35rem;
+  background: #080b16d9;
+  pointer-events: auto;
+  box-shadow: 0 4px 18px #0005;
+}
+
+#prevCharacter {
+  left: 8px;
+}
+
+#nextCharacter {
+  right: 8px;
+}
+
+/* ภาพเคลื่อนไหวของแผนภูมิ */
+
+.radar-data {
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: scale(.03);
+  opacity: .15;
+}
+
+.radar.revealed .radar-data {
+  animation: radarReveal .85s cubic-bezier(.16,1,.3,1) forwards;
+}
+
+@keyframes radarReveal {
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.action-link.secondary {
+  background: #52e6df12;
+  border-color: #52e6df66;
+}
+
+.action-link.secondary:hover {
+  background: #52e6df25;
+}
+
+/* ปุ่มค้นหาและลิงก์ */
 
 .detail-actions {
   display: flex;
@@ -481,14 +629,9 @@ body::before {
   transition: background .2s;
 }
 
-.action-link:hover { background: #8b7cff4a; }
-
-.action-link.secondary {
-  background: #52e6df12;
-  border-color: #52e6df66;
+.action-link:hover {
+  background: #8b7cff4a;
 }
-
-.action-link.secondary:hover { background: #52e6df25; }
 
 /* Radar chart */
 
@@ -518,8 +661,7 @@ body::before {
   stroke-linejoin: round;
 }
 
-.radar-note,
-.disclaimer {
+.radar-note {
   font-size: .7rem;
   line-height: 1.65;
   color: var(--muted);
@@ -555,36 +697,62 @@ body::before {
     padding: 12px 0;
   }
 
-  .hero-panel { display: none; }
+  .hero-panel {
+    display: none;
+  }
 
-  .hero h1 { font-size: 1.7rem; }
+  .hero h1 {
+    font-size: 1.7rem;
+  }
 
   .topbar {
     height: 52px;
     flex-basis: 52px;
   }
 
-  .topnote { font-size: .6rem; }
+  .topnote {
+    font-size: .6rem;
+  }
 
-  .card { width: 250px; }
+  .card {
+    width: 250px;
+  }
 
-  .portrait { min-height: 150px; }
+  .portrait {
+    min-height: 150px;
+  }
 
   .modalcontent {
     grid-template-columns: .65fr 1.35fr;
   }
 
-  .details { padding: 22px 18px; }
+  .details {
+    padding: 22px 18px;
+  }
 }
 
 @media (max-width: 520px) {
-  .wrap { width: 92%; }
+  .wrap {
+    width: 92%;
+  }
 
-  .topnote, .hint { display: none; }
+  .topnote,
+  .hint {
+    display: none;
+  }
 
-  .hero { padding: 10px 0; }
+  .top-action {
+    padding: 7px 9px;
+    font-size: .72rem;
+  }
 
-  .hero h1 { margin: 5px 0; }
+  .hero {
+    padding: 10px 0;
+  }
+
+  .hero h1 {
+    margin: 5px 0;
+  }
 
   .hero p {
     font-size: .76rem;
@@ -602,28 +770,46 @@ body::before {
     min-height: 145px;
   }
 
-  .cardbody { padding: 12px; }
+  .cardbody {
+    padding: 12px;
+  }
 
-  .cardbio { -webkit-line-clamp: 2; }
+  .cardbio {
+    -webkit-line-clamp: 2;
+  }
 
-  .modal { padding: 8px; }
+  .modal {
+    padding: 8px;
+  }
 
-  .modalbox { height: 94dvh; }
+  .modalbox {
+    height: 94dvh;
+  }
 
   .modalcontent {
     grid-template-columns: 1fr;
     grid-template-rows: 30% 70%;
   }
 
-  .details { padding: 15px 17px; }
+  .details {
+    padding: 15px 17px;
+  }
 
-  .details h2 { font-size: 1.35rem; }
+  .details h2 {
+    font-size: 1.35rem;
+  }
 
-  .detailtitle { margin-top: 12px; }
+  .detailtitle {
+    margin-top: 12px;
+  }
 
-  .radar { max-width: 320px; }
+  .radar {
+    max-width: 320px;
+  }
 
-  .detailgrid { gap: 6px; }
+  .detailgrid {
+    gap: 6px;
+  }
 
   .detailbox {
     padding: 8px;
@@ -632,23 +818,17 @@ body::before {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .portrait img, .card { transition: none; }
-}
-  
-  .carousel-viewport {
-  overflow: hidden;
-  touch-action: pan-y;
-  cursor: grab;
-  user-select: none;
-}
+  .portrait img,
+  .card {
+    transition: none;
+  }
 
-.carousel-viewport:active {
-  cursor: grabbing;
-}
-
-.track {
-  will-change: transform;
-  transform: translate3d(0, 0, 0);
+  *,
+  *::before,
+  *::after {
+    animation-duration: .01ms !important;
+    transition-duration: .01ms !important;
+  }
 }
 </style>
 </head>
@@ -659,33 +839,43 @@ body::before {
 
     <header class="topbar">
       <div class="brand">CHARACTER<span>VERSE</span></div>
-      <div class="topnote">CHARACTER ARCHIVE · FAN-MADE</div>
+
+      <div class="top-actions">
+        <div class="topnote">CHARACTER ARCHIVE · FAN-MADE</div>
+        <button class="top-action" id="refreshPage" type="button" title="รีเฟรชหน้าเว็บ">
+          ↻ รีเฟรช
+        </button>
+      </div>
     </header>
 
     <section class="hero">
       <div>
         <div class="eyebrow">EXPLORE THE UNIVERSE</div>
-        <h1>Every character has <em>a story to tell.</em></h1>
-        <p>สำรวจตัวละครจากเกม อนิเมะ และดนตรี พร้อมประวัติ ความสามารถ จุดเด่น และแผนภูมิสถานะห้าเหลี่ยม</p>
+        <h1>Every legend leaves <em>a scar on the universe.</em></h1>
+        <p>ENTER THE ARCHIVE. UNLEASH THEIR LEGACY.</p>
       </div>
 
       <div class="hero-panel">
         <div class="eyebrow">DATABASE STATUS</div>
         <strong>CHARACTER ARCHIVE</strong>
-        <small id="heroCount">8 CHARACTERS · CONTINUOUS MODE</small>
+        <small id="heroCount">CHARACTERS · CONTINUOUS MODE</small>
       </div>
     </section>
 
     <div class="searchrow">
-      <input id="search" class="search" type="search"
+      <input
+        id="search"
+        class="search"
+        type="search"
         placeholder="ค้นหาชื่อตัวละคร หรือเรื่องที่ปรากฏ…"
-        aria-label="ค้นหาตัวละคร">
+        aria-label="ค้นหาตัวละคร"
+      >
       <span class="hint">เลื่อนซ้าย–ขวาเพื่อสำรวจ · คลิกตัวละครเพื่อดูรายละเอียด</span>
     </div>
 
     <div class="sectionhead">
       <h2>Character Directory</h2>
-      <span id="count">8 ตัวละคร</span>
+      <span id="count">ตัวละคร</span>
     </div>
 
     <main id="viewport" class="carousel-viewport">
@@ -701,8 +891,15 @@ body::before {
 </div>
 
 <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalName">
-  <div class="modalbox">
+  <div class="modalbox" id="modalbox">
+
+    <div class="modal-navrow">
+      <button class="modal-nav" id="prevCharacter" type="button" aria-label="ตัวละครก่อนหน้า">‹</button>
+      <button class="modal-nav" id="nextCharacter" type="button" aria-label="ตัวละครถัดไป">›</button>
+    </div>
+
     <button class="close" id="close" aria-label="ปิดรายละเอียด">×</button>
+
     <div class="modalcontent">
       <div class="modalportrait" id="modalPortrait"></div>
       <div class="details" id="details"></div>
@@ -740,7 +937,7 @@ const characters = [
     status: 'ตัวละครเนื้อเรื่อง',
     image: 'cathy(love).png',
     gameUrl: 'https://store.steampowered.com/app/1574820/Until_Then/',
-    bio: 'Until Then เป็นเกมผจญภัยเล่าเรื่องที่มีฉากหลังในฟิลิปปินส์และติดตามชีวิตวัยรุ่นผ่านความสัมพันธ์ มิตรภาพ ความทรงจำ และเหตุการณ์ที่ค่อย ๆ เปลี่ยนความเข้าใจของตัวละคร Cathy ควรพิจารณาผ่านบทบาทในเรื่องและความสัมพันธ์กับตัวละครอื่น มากกว่าค่าพลังแบบเกมต่อสู้ เนื้อเรื่องมีรายละเอียดที่เปิดเผยตามลำดับการเล่น',
+    bio: 'Cathy อยู่ในโลกของ Until Then ที่ชีวิตวัยรุ่นดูเหมือนจะเดินไปตามจังหวะธรรมดา—บทสนทนา ข้อความที่ส่งหากัน ความทรงจำ และความสัมพันธ์ที่ค่อย ๆ ก่อตัว แต่ภายใต้ความคุ้นเคยนั้น ความจริงกลับไม่ได้มั่นคงอย่างที่ทุกคนเชื่อ เมื่อเหตุการณ์บางอย่างเริ่มทำให้ความทรงจำและสิ่งที่ตัวละครเข้าใจไม่ตรงกัน ความรู้สึกปลอดภัยก็กลายเป็นคำถามว่าเรารู้จักคนข้างตัวดีแค่ไหน และสิ่งที่จำได้คือความจริงทั้งหมดหรือไม่ เรื่องของ Cathy จึงอ่านได้ในฐานะความตึงเครียดระหว่างความผูกพัน ความไม่แน่นอน และการพยายามยึดโยงตัวเองไว้กับโลกที่เปลี่ยนไป ยิ่งมองผ่านรายละเอียดเล็ก ๆ ในความสัมพันธ์ เรื่องยิ่งให้ความรู้สึกเหมือนบางสิ่งกำลังร้าวอยู่ใต้พื้นผิว (เป็นคำบรรยายเชิงตีความ ไม่ใช่การยืนยันเหตุการณ์เฉพาะในเนื้อเรื่อง)',
     skills: ['การสื่อสาร', 'การสร้างความสัมพันธ์', 'การตัดสินใจ', 'รับมือสถานการณ์ทางอารมณ์'],
     strengths: [
       ['จุดเด่น', 'บทบาทในเรื่องและความสัมพันธ์'],
@@ -750,8 +947,8 @@ const characters = [
     radar: [2, 3, 3, 3, 4],
     note: 'ไม่มีระบบค่าสถานะต่อสู้แบบ RPG อย่างเป็นทางการ'
   },
-  
-{
+
+  {
     id: 'kamen-rider-wizard',
     name: 'Kamen Rider Wizard',
     series: 'Kamen Rider Wizard',
@@ -894,8 +1091,8 @@ const characters = [
     radar: [3, 4, 3, 3, 5],
     note: 'แสดงจุดเด่นด้านดนตรี ไม่ใช่พลังต่อสู้'
   },
-  
-{
+
+  {
     id: 'papyrus',
     name: 'Papyrus',
     series: 'Undertale',
@@ -921,8 +1118,7 @@ const characters = [
     note: 'แผนภูมิเป็นการประเมินเชิงสร้างสรรค์ ไม่ใช่ค่าสถานะทางการของเกม'
   },
 
-  
-{
+  {
     id: 'aristotle',
     name: 'Aristotle',
     series: 'ปรัชญากรีกโบราณ',
@@ -945,9 +1141,9 @@ const characters = [
     ],
     radar: [4, 4, 3, 3, 5],
     note: 'แผนภูมิเป็นการตีความเชิงสร้างสรรค์เพื่อแสดงลักษณะด้านความคิด ไม่ใช่ค่าสถานะทางการของบุคคลจริง'
-},
-  
-{
+  },
+
+  {
     id: 'na-kom',
     name: 'น้าค่อม ชวนชื่น',
     series: 'วงการบันเทิงไทย',
@@ -997,7 +1193,6 @@ const characters = [
     radar: [4, 4, 3, 5, 5],
     note: 'แผนภูมิเป็นการประเมินเชิงสร้างสรรค์เพื่อแสดงบุคลิกและจุดเด่น ไม่ใช่ค่าสถานะทางการ'
   }
-
 ];
 
 /* ชื่อสถานะทั้ง 5 มุม */
@@ -1066,30 +1261,30 @@ function makeCard(c) {
       `radial-gradient(ellipse at center, ${c.glow}35, transparent 70%),
        linear-gradient(145deg,#202745,#101628)`;
   }, { once: true });
- 
-el.addEventListener('click', e => {
-  
-el.querySelector('.viewbtn').addEventListener('click', e => {
-  e.stopPropagation();
-  openDetails(c);
-});
 
-  if (suppressClick) {
-    suppressClick = false;
-    e.preventDefault();
-    e.stopPropagation();
-    return;
-  }
+  el.addEventListener('click', e => {
+    if (suppressClick) {
+      suppressClick = false;
+      e.preventDefault();
+      e.stopPropagation();
+      return;
+    }
 
-  openDetails(c);
-});
-
-el.addEventListener('keydown', e => {
-  if (e.key === 'Enter' || e.key === ' ') {
-    e.preventDefault();
     openDetails(c);
-  }
-});
+  });
+
+  el.querySelector('.viewbtn').addEventListener('click', e => {
+    e.stopPropagation();
+    openDetails(c);
+  });
+
+  el.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      openDetails(c);
+    }
+  });
+
   return el;
 }
 
@@ -1143,10 +1338,6 @@ function render() {
       .reduce((sum, el) => sum + el.getBoundingClientRect().width, 0)
       + gap * Math.max(0, activeChars.length - 1);
 
-    /*
-      ถ้าแถวตัวละครสั้น ให้เพิ่มชุดสำรอง
-      เพื่อช่วยให้การเลื่อนวนต่อเนื่องมากขึ้น
-    */
     if (
       loopWidth > 0 &&
       activeChars.length > 1 &&
@@ -1266,7 +1457,6 @@ function openDetails(c) {
   }).join('');
 
   /* วาง POWER, STAMINA, DEFENSE, SPEED, SKILL รอบจุดยอด */
-
   const labels = axes.map((axis, i) => {
     const [x, y] = point(labelR, i);
 
@@ -1298,6 +1488,7 @@ function openDetails(c) {
       ${spokes}
 
       <polygon
+        class="radar-data"
         points="${polygon}"
         fill="${c.glow}"
         fill-opacity=".32"
@@ -1326,10 +1517,6 @@ function openDetails(c) {
     'https://www.google.com/search?q=' +
     encodeURIComponent(c.name + ' ' + c.series);
 
-  /*
-    gameUrl จะมีเฉพาะตัวละครที่มาจากเกม
-    ตัวละครอื่นจะแสดงเฉพาะปุ่ม Google
-  */
   const links = `
     <div class="detail-actions">
       <a
@@ -1351,6 +1538,16 @@ function openDetails(c) {
   `;
 
   document.getElementById('details').innerHTML = `
+    <div class="detail-topline">
+      <span class="eyebrow">CHARACTER DOSSIER</span>
+      <button
+        class="collapse-btn"
+        id="toggleDetails"
+        type="button"
+        aria-expanded="false"
+      >อ่านเนื้อเรื่องเต็ม +</button>
+    </div>
+
     <h2 id="modalName">${c.name}</h2>
 
     <div class="origin">
@@ -1359,7 +1556,7 @@ function openDetails(c) {
 
     ${links}
 
-    <div class="detailtext">
+    <div class="detailtext story-collapsed" id="storyText">
       ${c.bio}
     </div>
 
@@ -1387,7 +1584,7 @@ function openDetails(c) {
     </div>
 
     <div class="detailtitle">
-      CHARACTER NOTES / ข้อมูลเพิ่มเติม
+      CHARACTER HIGHLIGHTS / จุดเด่น
     </div>
 
     <div class="detailgrid">
@@ -1398,16 +1595,65 @@ function openDetails(c) {
         </div>
       `).join('')}
     </div>
-
-    <div class="disclaimer">
-      ${c.note}
-    </div>
   `;
 
   modal.classList.add('open');
+
+  /* ทุกครั้งที่เปิดตัวละคร ให้ย่อเฉพาะเนื้อเรื่องไว้ก่อน */
+  document.getElementById('storyText').classList.add('story-collapsed');
+
   paused = true;
+
+  /* ให้แผนภูมิเริ่มจากศูนย์แล้วขยาย */
+  requestAnimationFrame(() => {
+    const radar = document.querySelector('.radar');
+
+    if (radar) {
+      radar.classList.remove('revealed');
+      void radar.getBoundingClientRect();
+      radar.classList.add('revealed');
+    }
+  });
+
+  /* ปุ่มนี้ควบคุมเฉพาะเนื้อเรื่อง */
+  document.getElementById('toggleDetails').addEventListener('click', () => {
+    const story = document.getElementById('storyText');
+    const collapsed = story.classList.toggle('story-collapsed');
+    const toggle = document.getElementById('toggleDetails');
+
+    toggle.textContent = collapsed
+      ? 'อ่านเนื้อเรื่องเต็ม +'
+      : 'ย่อเนื้อเรื่อง −';
+
+    toggle.setAttribute('aria-expanded', String(!collapsed));
+  });
+
   document.getElementById('close').focus();
 }
+
+/* เปลี่ยนตัวละครโดยไม่ปิดหน้ารายละเอียด */
+function switchCharacter(step) {
+  if (!activeChars.length) return;
+
+  const name = document.getElementById('modalName')?.textContent;
+  let i = activeChars.findIndex(c => c.name === name);
+
+  if (i < 0) i = 0;
+
+  const nextIndex =
+    (i + step + activeChars.length) % activeChars.length;
+
+  openDetails(activeChars[nextIndex]);
+}
+
+document.getElementById('prevCharacter')
+  .addEventListener('click', () => switchCharacter(-1));
+
+document.getElementById('nextCharacter')
+  .addEventListener('click', () => switchCharacter(1));
+
+document.getElementById('refreshPage')
+  .addEventListener('click', () => location.reload());
 
 /* ปิดหน้ารายละเอียด */
 function closeModal() {
@@ -1420,15 +1666,32 @@ document.getElementById('close')
 
 document.getElementById('modal')
   .addEventListener('click', e => {
-    if (e.target.id === 'modal') closeModal();
+    if (e.target.id === 'modal') {
+      closeModal();
+    }
   });
 
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') closeModal();
+  if (e.key === 'Escape') {
+    closeModal();
+  }
+
+  if (
+    document.getElementById('modal').classList.contains('open') &&
+    e.key === 'ArrowLeft'
+  ) {
+    switchCharacter(-1);
+  }
+
+  if (
+    document.getElementById('modal').classList.contains('open') &&
+    e.key === 'ArrowRight'
+  ) {
+    switchCharacter(1);
+  }
 });
 
 search.addEventListener('input', render);
-
 
 /* ควบคุมการเลื่อนแถวตัวละคร */
 viewport.addEventListener('pointerenter', () => {
@@ -1499,7 +1762,10 @@ track.addEventListener('click', e => {
 
 function stopDrag(e) {
   if (!dragging) return;
-  if (e && activePointer !== null && e.pointerId !== activePointer) return;
+
+  if (e && activePointer !== null && e.pointerId !== activePointer) {
+    return;
+  }
 
   dragging = false;
 
