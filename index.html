@@ -224,10 +224,13 @@ body::before {
   transition: border-color .2s, box-shadow .2s;
 }
 
-.card:hover,
-.card:focus-visible {
+.card:hover {
   border-color: #9b8cffaa;
   box-shadow: 0 10px 35px #0005;
+}
+
+.card:focus,
+.card:focus-visible {
   outline: none;
 }
 
@@ -932,16 +935,30 @@ function makeCard(c) {
       `radial-gradient(ellipse at center, ${c.glow}35, transparent 70%),
        linear-gradient(145deg,#202745,#101628)`;
   }, { once: true });
+ 
+el.addEventListener('click', e => {
+  
+el.querySelector('.viewbtn').addEventListener('click', e => {
+  e.stopPropagation();
+  openDetails(c);
+});
 
-  el.addEventListener('click', () => openDetails(c));
+  if (suppressClick) {
+    suppressClick = false;
+    e.preventDefault();
+    e.stopPropagation();
+    return;
+  }
 
-  el.addEventListener('keydown', e => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      openDetails(c);
-    }
-  });
+  openDetails(c);
+});
 
+el.addEventListener('keydown', e => {
+  if (e.key === 'Enter' || e.key === ' ') {
+    e.preventDefault();
+    openDetails(c);
+  }
+});
   return el;
 }
 
